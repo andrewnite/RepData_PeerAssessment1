@@ -31,7 +31,7 @@ median(activityDataByDate$steps, na.rm=TRUE)
 
 ``` {r}
 activityDataByInterval <- aggregate(steps ~ interval, data=activityData, FUN=sum)
-plot(activityDataByInterval, type="l", main="Number of steps taken by interval of the day", xlab="Steps", ylab="Interval")
+plot(activityDataByInterval, type="l", main="Number of steps taken by interval of the day", xlab="Interval", ylab="Steps")
 activityDataByInterval[which.max(activityDataByInterval$steps),][,1]
 ```
 
