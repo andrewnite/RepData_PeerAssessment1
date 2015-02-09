@@ -5,21 +5,48 @@ output:
     keep_md: true
 ---
 
+## Load any external CRAN packages
+``` {r}
+library(dplyr)
+library(ggplot2)
+```
 
 ## Loading and preprocessing the data
-
+``` {r}
+activityData <- read.csv("activity.csv", stringsAsFactors=FALSE)
+```
 
 
 ## What is mean total number of steps taken per day?
-
+``` {r}
+# Summarize the data by date
+activityDataByDate <- aggregate(steps ~ date, data=activityData, FUN=sum)
+hist(activityDataByDate$steps, xlab="Number of steps in a day", main="Histogram of steps")
+mean(activityDataByDate$steps, na.rm=TRUE)
+median(activityDataByDate$steps, na.rm=TRUE)
+```
 
 
 ## What is the average daily activity pattern?
 
-
+``` {r}
+activityDataByInterval <- aggregate(steps ~ interval, data=activityData, FUN=sum)
+plot(activityDataByInterval, type="l", main="Number of steps taken by interval of the day", xlab="Steps", ylab="Interval")
+activityDataByInterval[which.max(activityDataByInterval$steps),][,1]
+```
 
 ## Imputing missing values
 
+``` {r}
+# Get the total number of incomplete cases
+sum(complete.cases(activityData)==FALSE)
+
+# Create the imputed dataset
+imputedData <- activityData
+imputedData$steps[is.na(imputedData$steps)] <- 
+  with(imputedData, ave(steps, interval, FUN = function(x) median(x, na.rm=TRUE)))[is.na(imputedData$steps)]
+
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
